@@ -306,6 +306,27 @@ class TDSLstmEncoder(nn.Module):
         return out
     
 
+class TDSGruEncoder(nn.Module):
+    def __init__(
+        self,
+        num_features: int,
+        hidden_size: int = 320,
+        num_layers: int = 2,
+        dropout: float = 0.1,
+        bidirectional: bool = False
+    ) -> None:
+        super().__init__()
+        self.gru = nn.GRU(
+            num_features,
+            hidden_size,
+            num_layers,
+            dropout=dropout,
+            bidirectional=bidirectional,
+        )
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        out, _ = self.gru(inputs)
+        return out 
 
 
 
