@@ -284,7 +284,8 @@ class TDSLstmCTCModule(pl.LightningModule):
         optimizer: DictConfig,
         lr_scheduler: DictConfig,
         decoder: DictConfig,
-        hidden_size: int
+        hidden_size: int,
+        bidirectional: bool
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
@@ -306,10 +307,11 @@ class TDSLstmCTCModule(pl.LightningModule):
             nn.Flatten(start_dim=2),
             TDSLstmEncoder(
                 num_features=num_features,
-                hidden_size=hidden_size
+                hidden_size=hidden_size,
+                bidirectional=bidirectional
             ),
             # (T, N, num_classes)
-            nn.Linear(hidden_size, charset().num_classes),
+            nn.Linear(hidden_size * 2 if bidirectional else hidden_size, charset().num_classes),
             nn.LogSoftmax(dim=-1),
         )
 

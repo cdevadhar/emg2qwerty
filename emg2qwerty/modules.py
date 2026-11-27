@@ -285,7 +285,8 @@ class TDSLstmEncoder(nn.Module):
     def __init__(
         self,
         num_features: int,
-        hidden_size: int = 512,
+        # choose 320 for bidirectional because it is close enough in parameters to 512 with one direction
+        hidden_size: int = 320,
         num_layers: int = 2,
         dropout: float = 0.1,
         bidirectional: bool = False
@@ -296,7 +297,8 @@ class TDSLstmEncoder(nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.dropout = dropout
-        self.LSTM = nn.LSTM(self.num_features, self.hidden_size, self.num_layers, dropout=self.dropout)
+        self.bidirectional = bidirectional
+        self.LSTM = nn.LSTM(self.num_features, self.hidden_size, self.num_layers, dropout=self.dropout, bidirectional=self.bidirectional)
 
         
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
